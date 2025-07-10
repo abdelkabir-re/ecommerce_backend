@@ -14,6 +14,7 @@ const app = express();
 //middleware
 app.use(express.json())
 
+
 if (process.env.NODE_ENV === "developement") {
   app.use(morgan("dev"));
   console.log(`mode:${process.env.NODE_ENV}`);
