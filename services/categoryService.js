@@ -1,6 +1,6 @@
-const CategoryModel = require("../models/categoryModel");
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
+const CategoryModel = require("../models/categoryModel");
 const ApiError = require("../utils/apiError");
 
 // @desc get list of  categories
@@ -21,7 +21,7 @@ exports.getCategories = asyncHandler(async (req, res) => {
 // @route post api/v1/categories
 // @access private
 exports.createCategory = asyncHandler(async (req, res) => {
-  const name = req.body.name;
+  const {name} = req.body;
   const category = await CategoryModel.create({ name, slug: slugify(name) });
   res.status(201).json({ data: category });
 });
@@ -30,7 +30,7 @@ exports.createCategory = asyncHandler(async (req, res) => {
 // @route get api/v1/categories/:id
 // @access public
 exports.getCategory = asyncHandler(async (req, res, next) => {
-  const id = req.params.id;
+  const {id} = req.params;
   const category = await CategoryModel.findById(id);
   if (!category) {
     return next(new ApiError(`No category with this id ${id}`, 404));
@@ -42,8 +42,8 @@ exports.getCategory = asyncHandler(async (req, res, next) => {
 // @route put api/v1/categories/id
 // @access private
 exports.updateCategory = asyncHandler(async (req, res, next) => {
-  const id = req.params.id;
-  const name = req.body.name;
+  const {id} = req.params;
+  const {name} = req.body;
   const category = await CategoryModel.findByIdAndUpdate(
     { _id: id },
     { name, slug: slugify(name) },
@@ -52,6 +52,7 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
   if (!category) {
     return next(new ApiError(`No category with this id ${id}`, 404));
   }
+
   res.status(200).json({ data: category });
 });
 
@@ -59,7 +60,7 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
 // @route delete api/v1/categories/:id
 // @access private
 exports.deleteCategory = asyncHandler(async (req, res, next) => {
-  const id = req.params.id;
+  const {id} = req.params;
   const category = await CategoryModel.findByIdAndDelete(id);
   if (!category) {
     return next(new ApiError(`No category with this id ${id}`, 404));
