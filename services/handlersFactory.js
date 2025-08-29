@@ -29,6 +29,7 @@ exports.updateOne = (Model) =>
 exports.createOne = (Model) =>
   asyncHandler(async (req, res) => {
     const newDc = await Model.create(req.body);
+    console.log('last etape')
     res.status(201).json({ data: newDc });
   });
 

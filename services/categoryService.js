@@ -1,11 +1,29 @@
+const { v4: uuidv4 } = require("uuid");
+const sharp = require("sharp");
+const asyncHandler = require("express-async-handler");
+const { uploadSingleImage } = require("../middlewares/uploadImageMiddleware");
 
 const CategoryModel = require("../models/categoryModel");
 const factory = require("./handlersFactory");
 
+//Upload single image
+exports.uploadCategoryImage = uploadSingleImage("image");
+// image processing
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
+  await sharp(req.file.buffer)
+    .resize(300, 300)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`uploads/categories/${filename}`);
+  req.body.image = filename;
+  next();
+});
+
 // @desc get list of  categories
 // @route get api/v1/categories
 // @access public
-exports.getCategories = factory.getAll(CategoryModel)
+exports.getCategories = factory.getAll(CategoryModel);
 // @desc create category
 // @route post api/v1/categories
 // @access private

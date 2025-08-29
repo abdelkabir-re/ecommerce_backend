@@ -4,8 +4,9 @@ const {
   getProduct,
   createProduct,
   updateProduct,
-  deleteProduct
- 
+  deleteProduct,
+  uploadProductImages,
+  resizeProductImages,
 } = require("../services/productService");
 const {
   getProductValidator,
@@ -21,8 +22,8 @@ const router = express.Router();
 router
   .route("/")
   .get(getProducts)
-  .post(createProductValidator, createProduct);
-router.patch("/:id", updateProductValidator, updateProduct);
+  .post(uploadProductImages,resizeProductImages,createProductValidator, createProduct);
+router.patch("/:id",uploadProductImages,resizeProductImages, updateProductValidator, updateProduct);
 router
   .route("/:id")
   .get(getProductValidator, getProduct)

@@ -1,3 +1,4 @@
+const path=require('path')
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -23,6 +24,7 @@ app.set("query parser", (str) => qs.parse(str));
 
 //middleware
 app.use(express.json());
+app.use(express.static(path.join(__dirname,'uploads')))
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
