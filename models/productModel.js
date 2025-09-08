@@ -85,22 +85,23 @@ const setImageUrl = (doc) => {
     const imageUrl = `${process.env.BASE_URL}/products/${doc.imageCover}`;
     doc.imageCover = imageUrl;
   }
-  if(doc.images){
-    const imagesList=[]
-    doc.images.forEach(image => {
+  if (doc.images) {
+    const imagesList = [];
+    doc.images.forEach((image) => {
       const imageUrl = `${process.env.BASE_URL}/products/${image}`;
-      imagesList.push(imageUrl)
+      imagesList.push(imageUrl);
     });
-    doc.images=imagesList
+    doc.images = imagesList;
   }
 };
 //findOne,findAll,Update
+//.post() = بعد العملية → ينفع نستخدم النتيجة (document) لكن ما نغيرهاش وما نوقفش العملية.
 productSchema.post("init", (doc) => {
   setImageUrl(doc);
 });
 //save
 productSchema.post("save", (doc) => {
   setImageUrl(doc);
-})
+});
 
 module.exports = mongoose.model("Product", productSchema);

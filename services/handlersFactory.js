@@ -29,7 +29,6 @@ exports.updateOne = (Model) =>
 exports.createOne = (Model) =>
   asyncHandler(async (req, res) => {
     const newDc = await Model.create(req.body);
-    console.log('last etape')
     res.status(201).json({ data: newDc });
   });
 
@@ -43,11 +42,11 @@ exports.getOne = (Model) =>
     res.status(200).json({ data: document });
   });
 
-exports.getAll = (Model,modelName='') =>
+exports.getAll = (Model, modelName = "") =>
   asyncHandler(async (req, res) => {
-    let filter={}
-    if(req.filterObject){
-      filter=req.filterObject
+    let filter = {};
+    if (req.filterObject) {
+      filter = req.filterObject;
     }
     const countDocuments = await Model.countDocuments();
     // Build Query
