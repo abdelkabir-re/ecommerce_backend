@@ -38,7 +38,24 @@ const userSchema = mongoose.Schema(
       type: String,
       default: true,
     },
+    //Child Reference =  (products)يعرف أولاده(user)الأب
+    wishList:[{
+      type:mongoose.Schema.ObjectId,
+      ref:"Product"
+    }],
+    addresses:[
+      {
+        id:{type:mongoose.Schema.Types.ObjectId},
+        alias:String,
+        details:String,
+        phone:String,
+        city:String,
+        postalCode:String
+      }
+      
+    ]
   },
+
   { timestamps: true }
 );
 

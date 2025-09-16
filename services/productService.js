@@ -53,7 +53,7 @@ exports.createProduct = factory.createOne(Product);
 // @desc get specific product by id
 // @route get api/v1/products/:id
 // @access public
-exports.getProduct = factory.getOne(Product);
+exports.getProduct = factory.getOne(Product,"reviews");
 
 // @desc update product
 // @route put api/v1/products/:id

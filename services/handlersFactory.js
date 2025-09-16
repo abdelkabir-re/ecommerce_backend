@@ -5,7 +5,7 @@ const ApiFeatures = require("../utils/apiFeatures");
 exports.deleteOne = (Model) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const document = await Model.findByIdAndDelete(id);
+    const document = await Model.findOneAndDelete(id);
     if (!document) {
       return next(new ApiError(`No document with this id ${id}`, 404));
     }
@@ -22,7 +22,8 @@ exports.updateOne = (Model) =>
         new ApiError(`No document with this id ${req.params.id}`, 404)
       );
     }
-
+    // trigger save: event when update document
+    document.save();
     res.status(200).json({ data: document });
   });
 
@@ -32,10 +33,16 @@ exports.createOne = (Model) =>
     res.status(201).json({ data: newDc });
   });
 
-exports.getOne = (Model) =>
+exports.getOne = (Model, populationOpt) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const document = await Model.findById(id);
+    //1 build query
+    let query = Model.findById(id);
+    if (populationOpt) {
+      query = query.populate(populationOpt);
+    }
+    // execute query
+    const document = await query;
     if (!document) {
       return next(new ApiError(`No document with this id ${id}`, 404));
     }

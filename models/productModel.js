@@ -68,9 +68,19 @@ const productSchema = new mongoose.Schema(
       min: [1, "Rating must be above or equal 1.0"],
       max: [5, "Rating must be below or equal 5.0"],
     },
+    ratingsQuantity:{
+      type:Number,
+      default:0
+    }
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+productSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id",
+});
 //Mongoose Midelware
 productSchema.pre(/^find/, function (next) {
   this.populate({
@@ -79,6 +89,8 @@ productSchema.pre(/^find/, function (next) {
   });
   next();
 });
+
+
 
 const setImageUrl = (doc) => {
   if (doc.imageCover) {
