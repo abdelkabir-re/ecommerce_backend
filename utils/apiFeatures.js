@@ -21,15 +21,15 @@ class ApiFeatures {
   search(modelName) {
     if (this.queryString.keyword) {
       let query = {};
-      if(modelName==='Products'){
+      if (modelName === "Products") {
         query.$or = [
-        { title: { $regex: this.queryString.keyword, $options: "i" } },
-        { description: { $regex: this.queryString.keyword, $options: "i" } },
-      ];
-      }else{
-        query={ name: { $regex: this.queryString.keyword, $options: "i" } }
+          { title: { $regex: this.queryString.keyword, $options: "i" } },
+          { description: { $regex: this.queryString.keyword, $options: "i" } },
+        ];
+      } else {
+        query = { name: { $regex: this.queryString.keyword, $options: "i" } };
       }
-      
+
       this.mongooseQuery = this.mongooseQuery.find(query);
     }
     return this;
@@ -39,43 +39,43 @@ class ApiFeatures {
     const page = this.queryString.page * 1 || 1;
     const limit = this.queryString.limit * 1 || 50;
     const skip = (page - 1) * limit;
-    const endIndex=limit * page
+    const endIndex = limit * page;
 
-    const pagination={}
-    pagination.currentPage=page;
-    pagination.limit=limit;
-    pagination.numberOfPages=Math.ceil(countDocuments/limit)
+    const pagination = {};
+    pagination.currentPage = page;
+    pagination.limit = limit;
+    pagination.numberOfPages = Math.ceil(countDocuments / limit);
 
-    if(endIndex<countDocuments){
-      pagination.next=page+1
+    if (endIndex < countDocuments) {
+      pagination.next = page + 1;
     }
-    if(skip>0){
-      pagination.prev=page-1
+    if (skip > 0) {
+      pagination.prev = page - 1;
     }
-    
-    this.paginationResult=pagination
+
+    this.paginationResult = pagination;
     this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
-    return this
+    return this;
   }
 
-  sort(){
+  sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(",").join(" ");
       this.mongooseQuery = this.mongooseQuery.sort(sortBy);
     } else {
       this.mongooseQuery = this.mongooseQuery.sort("-createdAt");
     }
-    return this
+    return this;
   }
 
-  limitFields(){
+  limitFields() {
     if (this.queryString.fields) {
-        const fields = this.queryString.fields.split(",").join(" ");
-        this.mongooseQuery = this.mongooseQuery.select(fields);
-      } else {
-        this.mongooseQuery = this.mongooseQuery.select("-__v");
-      }
-      return this
+      const fields = this.queryString.fields.split(",").join(" ");
+      this.mongooseQuery = this.mongooseQuery.select(fields);
+    } else {
+      this.mongooseQuery = this.mongooseQuery.select("-__v");
+    }
+    return this;
   }
 }
 

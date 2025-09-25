@@ -40,18 +40,17 @@ exports.addProductToCart = asyncHandler(async (req, res, next) => {
       //product not exist in cart push product to cartItems array
       cart.cartItems.push({ product: productId, color, price: product.price });
     }
-
-    // calculate total cart price
-    calcTotalCartPrice(cart);
-    await cart.save();
-
-    res.status(200).json({
-      status: "success",
-      message: "product added to cart successfully",
-      numberOfCartItems: cart.cartItems.length,
-      data: cart,
-    });
   }
+  // calculate total cart price
+  calcTotalCartPrice(cart);
+  await cart.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "product added to cart successfully",
+    numberOfCartItems: cart.cartItems.length,
+    data: cart,
+  });
 });
 
 // @desc get logged user cart

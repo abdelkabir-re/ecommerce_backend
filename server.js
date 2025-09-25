@@ -3,6 +3,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const qs = require("qs");
+const cors = require("cors");
+const compression = require("compression");
 
 dotenv.config({ path: "config.env" });
 const ApiError = require("./utils/apiError");
@@ -10,15 +12,24 @@ const globalError = require("./middlewares/errorMiddlewar");
 const dbConnection = require("./config/database");
 
 //routes
-const mountRoutes=require('./routes')
+const mountRoutes = require("./routes");
+const { webhookCheckout } = require("./services/orderService");
 
 // connect with database
 dbConnection();
 
 //express app
 const app = express();
-app.set("query parser", (str) => qs.parse(str));
+app.use(cors());
+app.options(/.*/, cors());
 
+app.use(compression());
+app.set("query parser", (str) => qs.parse(str));
+app.post(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  webhookCheckout
+);
 //middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "uploads")));
@@ -29,7 +40,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 //Mount routes
-mountRoutes(app)
+mountRoutes(app);
 
 app.all(/.*/, (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 404));
