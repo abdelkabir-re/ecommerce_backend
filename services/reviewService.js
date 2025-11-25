@@ -1,27 +1,22 @@
-
 const asyncHandler = require("express-async-handler");
 const factory = require("./handlersFactory");
-const Review=require('../models/reviewModel')
-
+const Review = require("../models/reviewModel");
 
 //nested routes
 //post api/v1/products/:productId/reviews
 exports.setProductIdAndUserIdToBody = (req, res, next) => {
-    if (!req.body.product) req.body.product = req.params.productId;
-    if (!req.body.user) req.body.user = req.user._id;
-    next();
-  };
+  if (!req.body.product) req.body.product = req.params.productId;
+  if (!req.body.user) req.body.user = req.user._id;
+  next();
+};
 
 //route get api/v1/product/:productId/reviews
-exports.createFilterObject=asyncHandler((req,res,next)=>{
-    let filterObject={}
-    if(req.params.productId) filterObject={product:req.params.productId}
-    req.filterObject=filterObject
-    next()
-})
-
-
-
+exports.createFilterObject = asyncHandler((req, res, next) => {
+  let filterObject = {};
+  if (req.params.productId) filterObject = { product: req.params.productId };
+  req.filterObject = filterObject;
+  next();
+});
 
 // @desc get list of  reviews
 // @route get api/v1/reviews

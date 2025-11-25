@@ -6,13 +6,18 @@ class ApiFeatures {
 
   filter() {
     const queryStringObj = { ...this.queryString };
+
     const excludesFileds = ["page", "sort", "limit", "fields", "keyword"];
     excludesFileds.forEach((field) => delete queryStringObj[field]);
 
     // Apply filtration using [gte,gt,lte,lt]
     let queryStr = JSON.stringify(queryStringObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    // const queryObj = JSON.parse(queryStr);
+    queryStr = queryStr.replace(
+      /\b(gte|gt|lte|lt|in)\b/g,
+      (match) => `$${match}`
+    );
+    console.log(JSON.parse(queryStr));
+
     this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
 
     return this;
@@ -70,6 +75,7 @@ class ApiFeatures {
 
   limitFields() {
     if (this.queryString.fields) {
+      console.log(this.queryString.fields);
       const fields = this.queryString.fields.split(",").join(" ");
       this.mongooseQuery = this.mongooseQuery.select(fields);
     } else {

@@ -10,8 +10,7 @@ exports.uploadProductImages = uploadMixOfImages([
   { name: "images", maxCount: 5 },
 ]);
 
-exports.resizeProductImages =asyncHandler( async (req, res, next) => {
-  console.log(req.files)
+exports.resizeProductImages = asyncHandler(async (req, res, next) => {
   // 1 imageCover processing
   if (req.files.imageCover) {
     const imageCoverFileName = `product-${uuidv4()}-${Date.now()}-cover.jpeg`;
@@ -36,8 +35,8 @@ exports.resizeProductImages =asyncHandler( async (req, res, next) => {
         req.body.images.push(imageName);
       })
     );
-    next();
   }
+  next();
 });
 
 // @desc get list of  products
@@ -53,7 +52,7 @@ exports.createProduct = factory.createOne(Product);
 // @desc get specific product by id
 // @route get api/v1/products/:id
 // @access public
-exports.getProduct = factory.getOne(Product,"reviews");
+exports.getProduct = factory.getOne(Product, "reviews");
 
 // @desc update product
 // @route put api/v1/products/:id

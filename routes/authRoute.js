@@ -1,5 +1,12 @@
 const express = require("express");
-const { singup, login, forgetPassword, verifyPassResetCode, resetPassword } = require("../services/authService");
+const {
+  singup,
+  login,
+  forgetPassword,
+  verifyPassResetCode,
+  resetPassword,
+  logout,
+} = require("../services/authService");
 const {
   singupValidator,
   loginValidator,
@@ -8,9 +15,10 @@ const {
 const router = express.Router();
 
 router.post("/singup", singupValidator, singup);
+router.post("/logout", logout);
 router.post("/login", loginValidator, login);
-router.post("/forgotPassword",forgetPassword);
-router.post("/verifyResetCode",verifyPassResetCode);
-router.put("/resetPassword",resetPassword);
+router.post("/forgotPassword", forgetPassword);
+router.post("/verifyResetCode", verifyPassResetCode);
+router.put("/resetPassword", resetPassword);
 
 module.exports = router;

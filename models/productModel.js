@@ -68,10 +68,10 @@ const productSchema = new mongoose.Schema(
       min: [1, "Rating must be above or equal 1.0"],
       max: [5, "Rating must be below or equal 5.0"],
     },
-    ratingsQuantity:{
-      type:Number,
-      default:0
-    }
+    ratingsQuantity: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
@@ -85,12 +85,10 @@ productSchema.virtual("reviews", {
 productSchema.pre(/^find/, function (next) {
   this.populate({
     path: "category",
-    select: "name -_id",
+    select: "name _id",
   });
   next();
 });
-
-
 
 const setImageUrl = (doc) => {
   if (doc.imageCover) {
@@ -100,7 +98,9 @@ const setImageUrl = (doc) => {
   if (doc.images) {
     const imagesList = [];
     doc.images.forEach((image) => {
+      console.log(image);
       const imageUrl = `${process.env.BASE_URL}/products/${image}`;
+      console.log(imageUrl);
       imagesList.push(imageUrl);
     });
     doc.images = imagesList;

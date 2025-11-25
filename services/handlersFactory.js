@@ -5,7 +5,7 @@ const ApiFeatures = require("../utils/apiFeatures");
 exports.deleteOne = (Model) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const document = await Model.findOneAndDelete(id);
+    const document = await Model.findOneAndDelete({ _id: id }, { new: true });
     if (!document) {
       return next(new ApiError(`No document with this id ${id}`, 404));
     }
@@ -69,7 +69,10 @@ exports.getAll = (Model, modelName = "") =>
     //Execute Query
     const { mongooseQuery, paginationResult } = apiFeatures;
     const documents = await mongooseQuery;
-    res
-      .status(200)
-      .json({ results: documents.length, paginationResult, data: documents });
+    res.status(200).json({
+      NbrOfDocuments: countDocuments,
+      results: documents.length,
+      paginationResult,
+      data: documents,
+    });
   });

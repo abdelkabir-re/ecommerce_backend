@@ -14,6 +14,7 @@ exports.singupValidator = [
     .isLength({ max: 32 })
     .withMessage("Too long User name")
     .custom((val, { req }) => {
+
       req.body.slug = slugify(val);
       return true;
     }),

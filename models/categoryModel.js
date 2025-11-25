@@ -34,9 +34,9 @@ const setImageUrl = (doc) => {
   }
 };
 //findOne,findAll,Update
-categorySchema.post("init", (doc) => {
-  setImageUrl(doc);
-});
+// categorySchema.post("init", (doc) => {
+//   setImageUrl(doc);
+// });
 //save
 categorySchema.post("save", (doc) => {
   setImageUrl(doc);

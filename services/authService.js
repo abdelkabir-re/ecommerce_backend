@@ -5,9 +5,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const ApiError = require("../utils/apiError");
 const sendEmail = require("../utils/sendEmail");
-const createToken=require('../utils/createToken')
-
-
+const createToken = require("../utils/createToken");
+const { sanitizeUser } = require("../utils/sanitizeData");
 
 // @desc singup
 // @route post api/v1/auth/singup
@@ -22,7 +21,7 @@ exports.singup = asyncHandler(async (req, res, next) => {
   //2-generate token
   const token = createToken(user._id);
 
-  res.status(201).json({ data: user, token });
+  res.status(201).json({ data: sanitizeUser(user), token });
 });
 
 exports.login = asyncHandler(async (req, res, next) => {
@@ -35,6 +34,10 @@ exports.login = asyncHandler(async (req, res, next) => {
   const token = createToken(user._id);
   // 3- send response to client
   res.status(200).json({ data: user, token });
+});
+
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.status(200).json({ message: "Logged out successfully" });
 });
 
 //@desc make sure the user is logged in
@@ -90,8 +93,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
 exports.allowedTo = (...roles) =>
   asyncHandler(async (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      console.log(roles)
-      console.log(req.user.role)
+      console.log(roles);
+      console.log(req.user.role);
 
       return next(
         new ApiError("you are not allowed to access this route", 403)
@@ -177,7 +180,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   if (!user) {
     return next(new ApiError("there is no user with this id"));
   }
-   //2)check if reset code verified
+  //2)check if reset code verified
   if (!user.passwordResetVerified) {
     return next(new ApiError("reset code not verified", 400));
   }
@@ -192,4 +195,3 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   const token = createToken(user._id);
   res.status(200).json({ token });
 });
-

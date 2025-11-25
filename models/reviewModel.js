@@ -52,11 +52,11 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
     },
   ]);
   if (result.length > 0) {
-    await Product.findByIdAndUpdate(productId, {
+    const product1 = await Product.findByIdAndUpdate(productId, {
       ratingsAverage: result[0].avgRatings,
       ratingsQuantity: result[0].ratingsQuantity,
     });
-    console.log(result);
+    console.log(product1);
   } else {
     await Product.findByIdAndUpdate(productId, {
       ratingsAverage: 0,
@@ -68,7 +68,7 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
 reviewSchema.post("save", async function () {
   await this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
-reviewSchema.post('findOneAndDelete', async (doc) => {
+reviewSchema.post("findOneAndDelete", async (doc) => {
   await mongoose.models.Review.calcAverageRatingsAndQuantity(doc.product);
 });
 
